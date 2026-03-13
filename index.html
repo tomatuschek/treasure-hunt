@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Treasure Hunt</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f6f6f6;
+    text-align: center;
+    margin-top: 80px;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    width: 500px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 20px;
+    width: 200px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+#result {
+    margin-top: 20px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Treasure Hunt</h1>
+
+<p>
+Willkommen zu eurer Schatzsuche.  
+Gebt den Code ein, den ihr gefunden habt.
+</p>
+
+<input id="codeInput" placeholder="Code eingeben">
+<button onclick="checkCode()">prüfen</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+function checkCode() {
+
+let code = document.getElementById("codeInput").value;
+
+if(code === "7mXK-E4qP"){
+document.getElementById("result").innerHTML = "Code 1 korrekt!";
+}
+
+else{
+document.getElementById("result").innerHTML = "Dieser Code stimmt noch nicht.";
+}
+
+}
+
+</script>
+
+</body>
+</html>
