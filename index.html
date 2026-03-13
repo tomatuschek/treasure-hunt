@@ -152,6 +152,14 @@
       color: var(--error);
     }
 
+    .label {
+      margin-top: 18px;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
     @media (max-width: 600px) {
       .terminal {
         padding: 18px;
@@ -190,11 +198,21 @@
       <div id="text2" class="typed-text"></div>
 
       <div id="codeArea" style="display:none;">
+        <div class="label">CODE</div>
         <div class="input-row">
           <input id="codeInput" type="text" placeholder="Code eingeben">
           <button id="checkBtn">PRÜFEN</button>
         </div>
         <div id="message" class="message"></div>
+      </div>
+
+      <div id="solutionArea" style="display:none;">
+        <div class="label">LÖSUNGSWORT</div>
+        <div class="input-row">
+          <input id="solutionInput" type="text" placeholder="Lösungswort eingeben">
+          <button id="solutionBtn">PRÜFEN</button>
+        </div>
+        <div id="solutionMessage" class="message"></div>
       </div>
     </section>
 
@@ -204,28 +222,8 @@
   </main>
 
   <script>
-    const normalCodes = [
-      "7mXK-E4qP",
-      "A9rN-A2Ld",
-      "p5TN-G8sQ",
-      "Z4wA-N6kR"
-    ];
-
-    const finalAnswers = ["erinnerung", "erinnerungen"];
-
-    const introText =
-`Willkommen.
-Wenn ihr diese Seite gefunden habt, hat eure Suche begonnen.
-
-Seid ihr bereit, den Schatz zu suchen?`;
-
-    const stageTexts = [
-`Gut.
-
-Dann beginnt jetzt eure Reise.
-Gebt den gefundenen Code ein, um den nächsten Hinweis freizuschalten.`,
-
-`Code akzeptiert.
+    const codeMap = {
+      "7mXK-E4qP": `Code akzeptiert.
 
 TBD
 TBD
@@ -233,7 +231,7 @@ TBD
 
 Gebt nun den nächsten Code ein.`,
 
-`Code akzeptiert.
+      "A9rN-A2Ld": `Code akzeptiert.
 
 TBD
 TBD
@@ -241,7 +239,7 @@ TBD
 
 Gebt nun den nächsten Code ein.`,
 
-`Code akzeptiert.
+      "p5TN-G8sQ": `Code akzeptiert.
 
 TBD
 TBD
@@ -249,7 +247,7 @@ TBD
 
 Gebt nun den nächsten Code ein.`,
 
-`Ihr habt alle vier Codes gefunden.
+      "Z4wA-N6kR": `Ihr habt alle vier Codes gefunden.
 
 Doch nun benötigt ihr einen weiteren Code.
 Diesen werdet ihr jedoch an keinem Ort finden.
@@ -259,18 +257,31 @@ Schaut euch eure bisherigen Codes genau an.
 
 TBD
 
-Gebt das deutsche Lösungswort ein.`,
+Gebt das deutsche Lösungswort ein.`
+    };
 
+    const finalAnswers = ["erinnerung", "erinnerungen"];
+
+    const introText =
+`Willkommen.
+Wenn ihr diese Seite gefunden habt, hat eure Suche begonnen.
+
+Seid ihr bereit, den Schatz zu suchen?`;
+
+    const startText =
+`Gut.
+
+Dann beginnt jetzt eure Reise.
+Gebt den gefundenen Code ein, um den nächsten Hinweis freizuschalten.`;
+
+    const finalText =
 `ZUGANG GEWÄHRT.
 
 TBD
 TBD
-TBD`
-    ];
+TBD`;
 
-    let stage = 0;
-
-    function typeText(element, text, speed = 24, callback = null) {
+    function typeText(element, text, speed = 22, callback = null) {
       element.innerHTML = "";
       let i = 0;
 
@@ -297,14 +308,14 @@ TBD`
       return value.trim();
     }
 
-    function normalizeForCompare(value) {
+    function normalizeLower(value) {
       return value.trim().toLowerCase();
     }
 
-    function showStageText(text) {
+    function showMainText(text, callback = null) {
       const block3 = document.getElementById("block3");
       block3.classList.add("visible");
-      typeText(document.getElementById("text3"), text, 22);
+      typeText(document.getElementById("text3"), text, 22, callback);
     }
 
     window.addEventListener("load", () => {
@@ -317,7 +328,7 @@ TBD`
       const block2 = document.getElementById("block2");
       block2.classList.add("visible");
 
-      typeText(document.getElementById("text2"), stageTexts[0], 22, () => {
+      typeText(document.getElementById("text2"), startText, 22, () => {
         document.getElementById("codeArea").style.display = "block";
         document.getElementById("codeInput").focus();
       });
@@ -326,39 +337,56 @@ TBD`
     function checkCode() {
       const input = document.getElementById("codeInput");
       const message = document.getElementById("message");
-      const rawValue = normalizeInput(input.value);
-      const value = normalizeForCompare(input.value);
+      const solutionArea = document.getElementById("solutionArea");
+      const value = normalizeInput(input.value);
 
-      if (stage < 4) {
-        if (rawValue === normalCodes[stage]) {
-          message.textContent = "CODE KORREKT";
-          message.className = "message success";
-          input.value = "";
-          stage++;
-          showStageText(stageTexts[stage]);
-        } else {
-          message.textContent = "FALSCHER CODE";
-          message.className = "message error";
-        }
-      } else if (stage === 4) {
-        if (finalAnswers.includes(value)) {
-          message.textContent = "CODE KORREKT";
-          message.className = "message success";
-          input.value = "";
-          stage++;
-          showStageText(stageTexts[stage]);
-        } else {
-          message.textContent = "FALSCHER CODE";
-          message.className = "message error";
-        }
+      if (codeMap[value]) {
+        message.textContent = "CODE KORREKT";
+        message.className = "message success";
+        input.value = "";
+
+        showMainText(codeMap[value], () => {
+          if (value === "Z4wA-N6kR") {
+            solutionArea.style.display = "block";
+            document.getElementById("solutionInput").focus();
+          } else {
+            solutionArea.style.display = "none";
+          }
+        });
+      } else {
+        message.textContent = "FALSCHER CODE";
+        message.className = "message error";
+      }
+    }
+
+    function checkSolution() {
+      const input = document.getElementById("solutionInput");
+      const message = document.getElementById("solutionMessage");
+      const value = normalizeLower(input.value);
+
+      if (finalAnswers.includes(value)) {
+        message.textContent = "LÖSUNG KORREKT";
+        message.className = "message success";
+        input.value = "";
+        showMainText(finalText);
+      } else {
+        message.textContent = "FALSCHES LÖSUNGSWORT";
+        message.className = "message error";
       }
     }
 
     document.getElementById("checkBtn").addEventListener("click", checkCode);
+    document.getElementById("solutionBtn").addEventListener("click", checkSolution);
 
     document.getElementById("codeInput").addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         checkCode();
+      }
+    });
+
+    document.getElementById("solutionInput").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        checkSolution();
       }
     });
   </script>
