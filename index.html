@@ -82,6 +82,7 @@
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 0.5px;
+      transition: all 0.2s ease;
     }
 
     .block {
@@ -169,6 +170,7 @@
       min-height: 46px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
+      transition: all 0.2s ease;
     }
 
     button:hover {
@@ -192,16 +194,12 @@
       text-shadow: 0 0 8px rgba(255,95,95,0.18);
     }
 
-    .hint-box {
-      margin-top: 16px;
-      border-left: 3px solid var(--accent);
-      padding: 12px 14px;
-      background: rgba(157,255,157,0.04);
-      color: var(--text);
-    }
-
-    .muted {
-      color: var(--muted);
+    .transition-text {
+      color: var(--accent);
+      white-space: pre-wrap;
+      line-height: 1.6;
+      margin-top: 8px;
+      opacity: 0.9;
     }
 
     @media (max-width: 640px) {
@@ -271,21 +269,6 @@
     const codeMap = {
       "7mXK-E4qP": `ACCESS GRANTED.
 
-RÄTSEL 1
-
-Euer erster Zielort führt euch an einen Platz,
-an dem eure gemeinsame Geschichte einst leise begonnen hat.
-
-Zwischen Wegen, Grün und alten Bäumen
-liegt eine Erinnerung an euer erstes Date.
-
-Sucht den Ort,
-an dem ihr euch im Schlosspark Stammheim wiederfinden könnt.
-
-Dort wartet der nächste Code.`,
-
-      "A9rN-A2Ld": `ACCESS GRANTED.
-
 RÄTSEL 2
 
 Die nächste Spur führt euch zu einem Ort,
@@ -299,7 +282,7 @@ und die dazugehörige Schwimmanlage.
 
 Dort findet ihr den nächsten Code.`,
 
-      "p5TN-G8sQ": `ACCESS GRANTED.
+      "A9rN-A2Ld": `ACCESS GRANTED.
 
 RÄTSEL 3
 
@@ -313,7 +296,7 @@ zur Bar von Tims Eltern.
 
 Dort wartet der nächste Code.`,
 
-      "Z4wA-N6kR": `ACCESS GRANTED.
+      "p5TN-G8sQ": `ACCESS GRANTED.
 
 RÄTSEL 4
 
@@ -323,9 +306,15 @@ ein markanter Punkt, den man nicht einfach übersieht.
 
 Sucht den Funkenturm in Opladen.
 
-Wenn ihr dort wart, habt ihr alle vier Schlüssel gefunden.
+Dort wartet der nächste Code.`,
 
-Doch der nächste Zugangscode ist an keinem Ort versteckt.
+      "Z4wA-N6kR": `ACCESS GRANTED.
+
+RÄTSEL 5
+
+Ihr habt nun alle vier Zugangscodes gefunden.
+
+Doch der nächste Schlüssel ist an keinem Ort versteckt.
 Ihr hattet ihn bereits die ganze Zeit bei euch.
 
 Schaut euch eure bisherigen Codes genau an.
@@ -349,10 +338,18 @@ Seid ihr bereit, den Schatz zu suchen?`;
     const startText =
 `PROTOKOLL AKTIVIERT.
 
-Gebt den gefundenen Code ein, um das nächste Rätsel freizuschalten.
+RÄTSEL 1
 
-Hinweis:
-Nur gültige Zugangscodes öffnen den nächsten Abschnitt.`;
+Euer erster Zielort führt euch an einen Platz,
+an dem eure gemeinsame Geschichte einst leise begonnen hat.
+
+Zwischen Wegen, Grün und alten Bäumen
+liegt eine Erinnerung an euer erstes Date.
+
+Sucht den Ort,
+an dem ihr euch im Schlosspark Stammheim wiederfinden könnt.
+
+Dort findet ihr den ersten Zugangscode.`;
 
     const finalText =
 `ACCESS GRANTED.
@@ -369,7 +366,7 @@ Hier kommt später der finale Hinweis zur versteckten Truhe hinein.
 Sobald dieser Text final ist,
 können darunter zusätzlich eure Bilder erscheinen.`;
 
-    function typeText(element, text, speed = 22, callback = null) {
+    function typeText(element, text, speed = 20, callback = null) {
       element.innerHTML = "";
       let i = 0;
 
@@ -392,6 +389,53 @@ können darunter zusätzlich eure Bilder erscheinen.`;
       }, speed);
     }
 
+    function runTransition(element, callback = null) {
+      const lines = [
+        "AUTHENTICATING...",
+        "CHECKING KEY...",
+        "DECRYPTING NEXT PROTOCOL...",
+        "ACCESSING NEXT NODE..."
+      ];
+
+      let lineIndex = 0;
+      element.innerHTML = "";
+
+      function showNextLine() {
+        if (lineIndex >= lines.length) {
+          setTimeout(() => {
+            if (callback) callback();
+          }, 250);
+          return;
+        }
+
+        const line = document.createElement("div");
+        line.className = "transition-text";
+        element.appendChild(line);
+
+        let charIndex = 0;
+        const cursor = document.createElement("span");
+        cursor.className = "cursor";
+        cursor.textContent = "█";
+        line.appendChild(cursor);
+
+        const interval = setInterval(() => {
+          if (charIndex < lines[lineIndex].length) {
+            cursor.remove();
+            line.append(document.createTextNode(lines[lineIndex].charAt(charIndex)));
+            line.appendChild(cursor);
+            charIndex++;
+          } else {
+            clearInterval(interval);
+            cursor.remove();
+            lineIndex++;
+            setTimeout(showNextLine, 140);
+          }
+        }, 16);
+      }
+
+      showNextLine();
+    }
+
     function normalizeInput(value) {
       return value.trim();
     }
@@ -407,10 +451,15 @@ können darunter zusätzlich eure Bilder erscheinen.`;
       statusbar.style.borderColor = isError ? "rgba(255,95,95,0.35)" : "var(--border)";
     }
 
-    function showMainText(text, callback = null) {
+    function showMainTextWithTransition(text, callback = null) {
       const block3 = document.getElementById("block3");
+      const text3 = document.getElementById("text3");
       block3.classList.add("visible");
-      typeText(document.getElementById("text3"), text, 20, callback);
+      text3.innerHTML = "";
+
+      runTransition(text3, () => {
+        typeText(text3, text, 20, callback);
+      });
     }
 
     window.addEventListener("load", () => {
@@ -450,12 +499,13 @@ können darunter zusätzlich eure Bilder erscheinen.`;
         input.value = "";
         solutionMessage.textContent = "";
 
-        showMainText(codeMap[value], () => {
+        showMainTextWithTransition(codeMap[value], () => {
           if (value === "Z4wA-N6kR") {
             solutionArea.style.display = "block";
             solutionInput.focus();
           } else {
             solutionArea.style.display = "none";
+            document.getElementById("codeInput").focus();
           }
         });
       } else {
@@ -473,7 +523,7 @@ können darunter zusätzlich eure Bilder erscheinen.`;
         flashMessage(message, "ACCESS GRANTED", true);
         setStatus("STATUS: LÖSUNG AKZEPTIERT");
         input.value = "";
-        showMainText(finalText);
+        showMainTextWithTransition(finalText);
       } else {
         flashMessage(message, "ACCESS DENIED", false);
         setStatus("STATUS: FALSCHE LÖSUNG", true);
