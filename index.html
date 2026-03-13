@@ -34,7 +34,7 @@
 
     .terminal {
       width: 100%;
-      max-width: 760px;
+      max-width: 820px;
       background: var(--panel);
       border: 1px solid var(--border);
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.45);
@@ -204,7 +204,14 @@
   </main>
 
   <script>
-    const correctCode = "7mXK-E4qP";
+    const normalCodes = [
+      "7mXK-E4qP",
+      "A9rN-A2Ld",
+      "p5TN-G8sQ",
+      "Z4wA-N6kR"
+    ];
+
+    const finalAnswers = ["erinnerung", "erinnerungen"];
 
     const introText =
 `Willkommen.
@@ -212,17 +219,56 @@ Wenn ihr diese Seite gefunden habt, hat eure Suche begonnen.
 
 Seid ihr bereit, den Schatz zu suchen?`;
 
-    const codeText =
+    const stageTexts = [
 `Gut.
 
 Dann beginnt jetzt eure Reise.
-Gebt den gefundenen Code ein, um den nächsten Hinweis freizuschalten.`;
+Gebt den gefundenen Code ein, um den nächsten Hinweis freizuschalten.`,
 
-    const successText =
-`CODE AKZEPTIERT.
+`Code akzeptiert.
 
-Das funktioniert schon ziemlich gut.
-Als Nächstes können wir hier den echten Hinweistext für Station 2 erscheinen lassen.`;
+TBD
+TBD
+TBD
+
+Gebt nun den nächsten Code ein.`,
+
+`Code akzeptiert.
+
+TBD
+TBD
+TBD
+
+Gebt nun den nächsten Code ein.`,
+
+`Code akzeptiert.
+
+TBD
+TBD
+TBD
+
+Gebt nun den nächsten Code ein.`,
+
+`Ihr habt alle vier Codes gefunden.
+
+Doch nun benötigt ihr einen weiteren Code.
+Diesen werdet ihr jedoch an keinem Ort finden.
+
+Tatsächlich hattet ihr ihn bereits die ganze Zeit vor euch.
+Schaut euch eure bisherigen Codes genau an.
+
+TBD
+
+Gebt das deutsche Lösungswort ein.`,
+
+`ZUGANG GEWÄHRT.
+
+TBD
+TBD
+TBD`
+    ];
+
+    let stage = 0;
 
     function typeText(element, text, speed = 24, callback = null) {
       element.innerHTML = "";
@@ -251,6 +297,16 @@ Als Nächstes können wir hier den echten Hinweistext für Station 2 erscheinen 
       return value.trim();
     }
 
+    function normalizeForCompare(value) {
+      return value.trim().toLowerCase();
+    }
+
+    function showStageText(text) {
+      const block3 = document.getElementById("block3");
+      block3.classList.add("visible");
+      typeText(document.getElementById("text3"), text, 22);
+    }
+
     window.addEventListener("load", () => {
       typeText(document.getElementById("text1"), introText, 22, () => {
         document.getElementById("actions1").style.display = "flex";
@@ -261,7 +317,7 @@ Als Nächstes können wir hier den echten Hinweistext für Station 2 erscheinen 
       const block2 = document.getElementById("block2");
       block2.classList.add("visible");
 
-      typeText(document.getElementById("text2"), codeText, 22, () => {
+      typeText(document.getElementById("text2"), stageTexts[0], 22, () => {
         document.getElementById("codeArea").style.display = "block";
         document.getElementById("codeInput").focus();
       });
@@ -270,19 +326,31 @@ Als Nächstes können wir hier den echten Hinweistext für Station 2 erscheinen 
     function checkCode() {
       const input = document.getElementById("codeInput");
       const message = document.getElementById("message");
-      const value = normalizeInput(input.value);
+      const rawValue = normalizeInput(input.value);
+      const value = normalizeForCompare(input.value);
 
-      if (value === correctCode) {
-        message.textContent = "CODE KORREKT";
-        message.className = "message success";
-
-        const block3 = document.getElementById("block3");
-        block3.classList.add("visible");
-
-        typeText(document.getElementById("text3"), successText, 22);
-      } else {
-        message.textContent = "FALSCHER CODE";
-        message.className = "message error";
+      if (stage < 4) {
+        if (rawValue === normalCodes[stage]) {
+          message.textContent = "CODE KORREKT";
+          message.className = "message success";
+          input.value = "";
+          stage++;
+          showStageText(stageTexts[stage]);
+        } else {
+          message.textContent = "FALSCHER CODE";
+          message.className = "message error";
+        }
+      } else if (stage === 4) {
+        if (finalAnswers.includes(value)) {
+          message.textContent = "CODE KORREKT";
+          message.className = "message success";
+          input.value = "";
+          stage++;
+          showStageText(stageTexts[stage]);
+        } else {
+          message.textContent = "FALSCHER CODE";
+          message.className = "message error";
+        }
       }
     }
 
