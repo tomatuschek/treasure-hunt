@@ -15,7 +15,6 @@
       --accent: #9dff9d;
       --accent-soft: rgba(157, 255, 157, 0.12);
       --error: #ff5f5f;
-      --error-soft: rgba(255, 95, 95, 0.12);
       --border: #222;
       --glow: 0 0 18px rgba(157, 255, 157, 0.08);
     }
@@ -267,107 +266,131 @@
 
   <script>
     const codeMap = {
-      "7mXK-E4qP": `ACCESS GRANTED.
+      "7mXK-E4qP": `RÄTSEL 2: [LÖSUNG: A9rN-A2Ld]
 
-RÄTSEL 2
+Es gibt rote.
+Es gibt blaue.
+Es gibt rosa.
 
-Rätsel zu Nataschas Wohnung / Wohnanlage 
+Es gibt einen von Alexandre Gustave
+Es gibt einen Schiefen
+Und vielleicht auch von Babel.
 
-tbd
+Ein Schild vor dem Parkplatz, Die Rückseite wird euch den Code verraten`,
 
-Es reicht nicht, nur den Code zu finden. 
-Ihr benötigt außerdem ein Verifikations-Selfie vor Ort. 
-Sendet dieses bitte an: ignacio.acertijo@posteo.de
+      "A9rN-A2Ld": `RÄTSEL 3: [LÖSUNG: p5TN-G8sQ]
 
-LÖSUNG: A9rN-A2Ld`,
+Der Ort, an dem alles begann.
 
-      "A9rN-A2Ld": `ACCESS GRANTED.
+Sucht das Werk von Barbara Haiduck, ist das etwa Timmy??
+Ein paar Schritte südöstlich, mit dem Blick weg vom Wasser.
+So schöne Bäume, was hier wohl einst war?
+Eine Informationstafel, doch ganz ohne Inhalt.
+Oder findet ihr doch irgendwo einen Code?`,
 
-RÄTSEL 3
+      "p5TN-G8sQ": `RÄTSEL 4: [LÖSUNG: Z4wA-N6kR]
 
-Rätsel zu Reckzügel Bar.
+Für den nächsten Code müsst ihr an einen Ort,
+an dem Gastfreundschaft kein Ereignis,
+sondern Gewohnheit ist.
 
-tbd
+Dort gibt es einen Raum,
+der nicht vom Himmel erhellt wird,
+und doch die Farbe der Sonne trägt.
 
-Es reicht nicht, nur den Code zu finden. 
-Ihr benötigt außerdem ein Verifikations-Selfie vor Ort. 
-Sendet dieses bitte an: ignacio.acertijo@posteo.de
+Wenn ihr ihn gefunden habt,
+sucht den Platz,
+an dem Gläser gefüllt,
+Gespräche geführt
+und Abende verlängert werden.
 
-LÖSUNG: p5TN-G8sQ`,
+Der nächste Code wartet nicht darauf,
+sondern darunter.`,
 
-      "p5TN-G8sQ": `ACCESS GRANTED.
+      "Z4wA-N6kR": `RÄTSEL 5: [LÖSUNG: Erinnerung / Erinnerungen – unabhängig von groß und klein schreibung]
 
-RÄTSEL 4
+Vier Schlüssel habt ihr gefunden.
+Doch der letzte Zugang wurde euch nie gegeben.
 
-Rätsel zum Funkenturm Opladen.
+Das liegt daran, dass ihr ihn bereits besitzt.
 
-tbd
+Kehrt zurück zu den vier Zeichenfolgen,
+die euch bis hierher geführt haben.
 
-Es reicht nicht, nur den Code zu finden. 
-Ihr benötigt außerdem ein Verifikations-Selfie vor Ort. 
-Sendet dieses bitte an: ignacio.acertijo@posteo.de
+Lest nicht ihren Anfang.
+Lest nicht ihr Ende.
+Betrachtet nur das,
+was jede von ihnen in ihrer Mitte trägt.
 
-LÖSUNG: Z4wA-N6kR`,
+Fügt diese vier Fragmente zusammen.
 
-      "Z4wA-N6kR": `ACCESS GRANTED.
+So entsteht ein Wort –
+allerdings nicht in eurer Sprache.
 
-RÄTSEL 5
+Übersetzt es.
 
-Ihr habt nun alle vier Zugangscodes gefunden.
-
-Doch der nächste Schlüssel ist an keinem Ort versteckt.
-Ihr hattet ihn bereits die ganze Zeit bei euch.
-
-tbd.
-
-Lösungswort: Erinnerung / erinnerungen
-
-Findet das Lösungswort und gebt es unten ein.`
+Dann kennt ihr das Lösungswort.`
     };
 
     const finalAnswers = ["erinnerung", "erinnerungen"];
 
-    const introText =
-`Willkommen.
+    const introText = `Einführung:
 
-Wenn ihr diese Seite gefunden habt, hat eure Suche begonnen.
+Willkommen, Tim und Natascha.
 
-tbd.
+Zunächst einmal: Herzlichen Glückwunsch zu eurer Hochzeit! Eure Freunde haben ein Geschenk für euch vorbereitet, und mich beauftragt euch dieses zu überreichen. Aber ihr glaubt hoffentlich nicht, dass ihr es einfach so, ohne jegliche Mühe, in Empfang nehmen dürft?
 
-Seid ihr bereit, den Schatz zu suchen?`;
+Nope.
 
-    const startText =
-`PROTOKOLL AKTIVIERT.
+Denn ich, Ignacio Acertijo, habe für euch ein kleines Spiel vorbereitet.
+Genauer gesagt: eine Prüfung eurer Erinnerung, eures Scharfsinns und eurer Fähigkeit, gemeinsam ans Ziel zu kommen.
 
-RÄTSEL 1
+Bei jedem Rätsel ist ein Ort gesucht, ggf. gibt es einen weiteren Hinweis, der diesen Ort genauer eingrenzt. Wenn ihr den Ort wisst, müsst ihr gemeinsam hin, dort werdet ihr einen Code finden, der euch zum nächsten Abschnitt führt.
 
-Euer erster Zielort führt euch an einen Platz,
-an dem eure gemeinsame Geschichte einst leise begonnen hat.
+Doch das allein genügt nicht.
+An jedem gefundenen Ort müsst ihr außerdem ein gemeinsames Selfie machen und dieses an folgende Adresse senden:
+ignacio.acertijo@posteo.de
 
-tbd.
+Solltet ihr an einem Rätsel vollständig scheitern, dürft ihr ebenfalls an diese Adresse schreiben und euer Versagen eingestehen.
+Vielleicht erbarme ich mich dann und sende euch einen weiteren Hinweis.
 
-Es reicht nicht, nur den Code zu finden. 
-Ihr benötigt außerdem ein Verifikations-Selfie vor Ort. 
-Sendet dieses bitte an: ignacio.acertijo@posteo.de
+Also:
+Seid ihr bereit, das Spiel zu spielen?`;
 
-Lösung: 7mXK-E4qP
+    const startText = `RÄTSEL 1: [LÖSUNG: 7mXK-E4qP]
 
-tbd.`;
+Jede Suche beginnt dort,
+wo etwas bereits existierte,
+lange bevor ihr beide gemeinsam auf Schatzjagd gehen würdet.
 
-    const finalText =
-`ACCESS GRANTED.
+Euer erster Zielort gehört zur Vergangenheit von ...
+Früher war er vertraut, alltäglich, beinahe unscheinbar.
+Heute ist er nur noch für jene bedeutend,
+die wissen, wonach sie suchen.
 
-RÄTSEL 6
+Doch Vorsicht:
+Die Lösung liegt nicht an der Tür und nicht im Inneren.
+Ihr müsst dorthin,
+wo Wohnen und Wasser Nachbarn sind.
 
-Ihr habt den letzten Zugang erfolgreich entschlüsselt.
+Wenn ihr den richtigen Ort gefunden habt,
+haltet Ausschau nach einer Straßenlaterne, in der Nähe des Eingangs.
+Dort verbirgt sich euer erster Code.`;
 
-Nun führt euch die letzte Spur an den Ort,
-an dem die Truhe auf euch wartet.
+    const finalText = `RÄTSEL 6: (vorab Text bis Selfies geprüft wurden): 
 
-tbd.
+Ihr habt es geschafft.
 
-Sobald dieser Text final ist,
-können darunter zusätzlich eure Bilder erscheinen.`;
+Alle vier Stationen liegen hinter euch – sehr gut.
+
+Doch bevor das letzte Rätsel erscheint,
+muss ich zunächst überprüfen,
+ob ihr die Orte auch wirklich besucht habt.
+
+Schickt mir eure Selfies.
+
+Besteht ihr die Prüfung,
+wird hier schon bald euer finales Rätsel erscheinen.`;
 
     function typeText(element, text, speed = 20, callback = null) {
       element.innerHTML = "";
