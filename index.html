@@ -7,16 +7,14 @@
 
   <style>
     :root {
-      --bg: #030303;
-      --panel: #0a0a0a;
-      --panel-2: #0f0f0f;
-      --text: #e8e8e8;
-      --muted: #8d8d8d;
-      --accent: #9dff9d;
-      --accent-soft: rgba(157, 255, 157, 0.12);
-      --error: #ff5f5f;
-      --border: #222;
-      --glow: 0 0 18px rgba(157, 255, 157, 0.08);
+      --bg: #050505;
+      --panel: #0d0d0d;
+      --text: #ebebeb;
+      --muted: #8f8f8f;
+      --accent: #b9ffb9;
+      --accent-soft: rgba(185, 255, 185, 0.10);
+      --error: #ff6a6a;
+      --border: #242424;
     }
 
     * {
@@ -26,9 +24,7 @@
     html, body {
       margin: 0;
       min-height: 100%;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 30%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
       font-family: "Courier New", Courier, monospace;
     }
@@ -42,10 +38,10 @@
 
     .terminal {
       width: 100%;
-      max-width: 900px;
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      max-width: 880px;
+      background: var(--panel);
       border: 1px solid var(--border);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 0 35px rgba(0,0,0,0.45);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 16px 40px rgba(0,0,0,0.45);
       padding: 24px;
     }
 
@@ -64,20 +60,21 @@
       margin: 0;
       font-size: clamp(28px, 5vw, 42px);
       letter-spacing: 1px;
+      font-weight: 700;
     }
 
     .subtitle {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
     }
 
     .statusbar {
       margin-top: 8px;
       padding: 10px 12px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.015);
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 0.5px;
@@ -86,11 +83,10 @@
 
     .block {
       margin-top: 18px;
-      padding: 16px;
+      padding: 18px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.015);
+      background: rgba(255,255,255,0.012);
       display: none;
-      box-shadow: var(--glow);
     }
 
     .block.visible {
@@ -128,7 +124,7 @@
       margin-top: 18px;
       margin-bottom: 6px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 1.2px;
       text-transform: uppercase;
     }
@@ -141,7 +137,7 @@
     }
 
     input {
-      flex: 1 1 250px;
+      flex: 1 1 260px;
       min-width: 0;
       background: #000;
       color: var(--text);
@@ -155,7 +151,7 @@
     input:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(157,255,157,0.15);
+      box-shadow: 0 0 0 1px rgba(185,255,185,0.14);
     }
 
     button {
@@ -185,25 +181,30 @@
 
     .success {
       color: var(--accent);
-      text-shadow: 0 0 8px rgba(157,255,157,0.18);
+      text-shadow: 0 0 8px rgba(185,255,185,0.18);
     }
 
     .error {
       color: var(--error);
-      text-shadow: 0 0 8px rgba(255,95,95,0.18);
+      text-shadow: 0 0 8px rgba(255,106,106,0.18);
     }
 
     .transition-text {
       color: var(--accent);
       white-space: pre-wrap;
-      line-height: 1.6;
-      margin-top: 8px;
-      opacity: 0.9;
+      line-height: 1.55;
+      margin-top: 6px;
+      opacity: 0.95;
+      font-size: 14px;
     }
 
     @media (max-width: 640px) {
       .terminal {
         padding: 18px;
+      }
+
+      .block {
+        padding: 14px;
       }
 
       .input-row {
@@ -226,19 +227,17 @@
       </div>
     </div>
 
-    <div id="statusbar" class="statusbar">
-      STATUS: WARTET AUF BESTÄTIGUNG
-    </div>
+    <div id="statusbar" class="statusbar">STATUS: WARTET AUF BESTÄTIGUNG</div>
 
-    <section id="block1" class="block visible">
-      <div id="text1" class="typed-text"></div>
-      <div class="actions" id="actions1" style="display:none;">
+    <section id="introBlock" class="block visible">
+      <div id="introText" class="typed-text"></div>
+      <div class="actions" id="introActions" style="display:none;">
         <button id="startBtn">JA</button>
       </div>
     </section>
 
-    <section id="block2" class="block">
-      <div id="text2" class="typed-text"></div>
+    <section id="gameBlock" class="block">
+      <div id="mainText" class="typed-text"></div>
 
       <div id="codeArea" style="display:none;">
         <div class="label">Code</div>
@@ -258,15 +257,11 @@
         <div id="solutionMessage" class="message"></div>
       </div>
     </section>
-
-    <section id="block3" class="block">
-      <div id="text3" class="typed-text"></div>
-    </section>
   </main>
 
   <script>
     const codeMap = {
-      "7mXK-E4qP": `RÄTSEL 2: [LÖSUNG: A9rN-A2Ld]
+      "7mXK-E4qP": `RÄTSEL 2
 
 Es gibt rote.
 Es gibt blaue.
@@ -278,7 +273,7 @@ Und vielleicht auch von Babel.
 
 Ein Schild vor dem Parkplatz, Die Rückseite wird euch den Code verraten`,
 
-      "A9rN-A2Ld": `RÄTSEL 3: [LÖSUNG: p5TN-G8sQ]
+      "A9rN-A2Ld": `RÄTSEL 3
 
 Der Ort, an dem alles begann.
 
@@ -288,7 +283,7 @@ So schöne Bäume, was hier wohl einst war?
 Eine Informationstafel, doch ganz ohne Inhalt.
 Oder findet ihr doch irgendwo einen Code?`,
 
-      "p5TN-G8sQ": `RÄTSEL 4: [LÖSUNG: Z4wA-N6kR]
+      "p5TN-G8sQ": `RÄTSEL 4
 
 Für den nächsten Code müsst ihr an einen Ort,
 an dem Gastfreundschaft kein Ereignis,
@@ -307,7 +302,7 @@ und Abende verlängert werden.
 Der nächste Code wartet nicht darauf,
 sondern darunter.`,
 
-      "Z4wA-N6kR": `RÄTSEL 5: [LÖSUNG: Erinnerung / Erinnerungen – unabhängig von groß und klein schreibung]
+      "Z4wA-N6kR": `RÄTSEL 5
 
 Vier Schlüssel habt ihr gefunden.
 Doch der letzte Zugang wurde euch nie gegeben.
@@ -357,7 +352,7 @@ Vielleicht erbarme ich mich dann und sende euch einen weiteren Hinweis.
 Also:
 Seid ihr bereit, das Spiel zu spielen?`;
 
-    const startText = `RÄTSEL 1: [LÖSUNG: 7mXK-E4qP]
+    const startText = `RÄTSEL 1
 
 Jede Suche beginnt dort,
 wo etwas bereits existierte,
@@ -377,7 +372,7 @@ Wenn ihr den richtigen Ort gefunden habt,
 haltet Ausschau nach einer Straßenlaterne, in der Nähe des Eingangs.
 Dort verbirgt sich euer erster Code.`;
 
-    const finalText = `RÄTSEL 6: (vorab Text bis Selfies geprüft wurden): 
+    const finalText = `RÄTSEL 6
 
 Ihr habt es geschafft.
 
@@ -419,8 +414,7 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
       const lines = [
         "AUTHENTICATING...",
         "CHECKING KEY...",
-        "DECRYPTING NEXT PROTOCOL...",
-        "ACCESSING NEXT NODE..."
+        "DECRYPTING NEXT PROTOCOL..."
       ];
 
       let lineIndex = 0;
@@ -430,7 +424,7 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
         if (lineIndex >= lines.length) {
           setTimeout(() => {
             if (callback) callback();
-          }, 250);
+          }, 180);
           return;
         }
 
@@ -454,9 +448,9 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
             clearInterval(interval);
             cursor.remove();
             lineIndex++;
-            setTimeout(showNextLine, 140);
+            setTimeout(showNextLine, 110);
           }
-        }, 16);
+        }, 14);
       }
 
       showNextLine();
@@ -474,42 +468,41 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
       const statusbar = document.getElementById("statusbar");
       statusbar.textContent = text;
       statusbar.style.color = isError ? "var(--error)" : "var(--muted)";
-      statusbar.style.borderColor = isError ? "rgba(255,95,95,0.35)" : "var(--border)";
+      statusbar.style.borderColor = isError ? "rgba(255,106,106,0.35)" : "var(--border)";
     }
 
-    function showMainTextWithTransition(text, callback = null) {
-      const block3 = document.getElementById("block3");
-      const text3 = document.getElementById("text3");
-      block3.classList.add("visible");
-      text3.innerHTML = "";
-
-      runTransition(text3, () => {
-        typeText(text3, text, 20, callback);
+    function replaceMainText(text, callback = null) {
+      const mainText = document.getElementById("mainText");
+      mainText.innerHTML = "";
+      runTransition(mainText, () => {
+        typeText(mainText, text, 20, callback);
       });
     }
-
-    window.addEventListener("load", () => {
-      typeText(document.getElementById("text1"), introText, 20, () => {
-        document.getElementById("actions1").style.display = "flex";
-        setStatus("STATUS: BEREIT");
-      });
-    });
-
-    document.getElementById("startBtn").addEventListener("click", () => {
-      const block2 = document.getElementById("block2");
-      block2.classList.add("visible");
-
-      typeText(document.getElementById("text2"), startText, 20, () => {
-        document.getElementById("codeArea").style.display = "block";
-        document.getElementById("codeInput").focus();
-        setStatus("STATUS: EINGABE AKTIV");
-      });
-    });
 
     function flashMessage(element, text, success = true) {
       element.textContent = text;
       element.className = success ? "message success" : "message error";
     }
+
+    window.addEventListener("load", () => {
+      typeText(document.getElementById("introText"), introText, 20, () => {
+        document.getElementById("introActions").style.display = "flex";
+        setStatus("STATUS: BEREIT");
+      });
+    });
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      document.getElementById("introBlock").classList.remove("visible");
+
+      const gameBlock = document.getElementById("gameBlock");
+      gameBlock.classList.add("visible");
+
+      typeText(document.getElementById("mainText"), startText, 20, () => {
+        document.getElementById("codeArea").style.display = "block";
+        document.getElementById("codeInput").focus();
+        setStatus("STATUS: EINGABE AKTIV");
+      });
+    });
 
     function checkCode() {
       const input = document.getElementById("codeInput");
@@ -525,13 +518,13 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
         input.value = "";
         solutionMessage.textContent = "";
 
-        showMainTextWithTransition(codeMap[value], () => {
+        replaceMainText(codeMap[value], () => {
           if (value === "Z4wA-N6kR") {
             solutionArea.style.display = "block";
             solutionInput.focus();
           } else {
             solutionArea.style.display = "none";
-            document.getElementById("codeInput").focus();
+            input.focus();
           }
         });
       } else {
@@ -549,7 +542,7 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
         flashMessage(message, "ACCESS GRANTED", true);
         setStatus("STATUS: LÖSUNG AKZEPTIERT");
         input.value = "";
-        showMainTextWithTransition(finalText);
+        replaceMainText(finalText);
       } else {
         flashMessage(message, "ACCESS DENIED", false);
         setStatus("STATUS: FALSCHE LÖSUNG", true);
@@ -560,15 +553,11 @@ wird hier schon bald euer finales Rätsel erscheinen.`;
     document.getElementById("solutionBtn").addEventListener("click", checkSolution);
 
     document.getElementById("codeInput").addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        checkCode();
-      }
+      if (event.key === "Enter") checkCode();
     });
 
     document.getElementById("solutionInput").addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        checkSolution();
-      }
+      if (event.key === "Enter") checkSolution();
     });
   </script>
 </body>
